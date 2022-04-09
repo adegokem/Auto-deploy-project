@@ -29,7 +29,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: project3 
-      ImageId: ami-00ee4df451840fa9d 
+      ImageId: ami-0b28dfc7adc325ef4 
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
