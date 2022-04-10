@@ -340,7 +340,6 @@ jobs:
           command: |
             yum install -y epel-release
             yum install -y tar gzip nodejs npm curl awscli
-            npm run start:dev
       - attach_workspace:
           name: Attach Workspace
           at: ~/           
