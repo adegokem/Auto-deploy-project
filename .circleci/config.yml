@@ -32,7 +32,6 @@ commands:
               npm run migrations:revert
             fi
 
-
 jobs:
   build-frontend:
     docker:
@@ -228,7 +227,8 @@ jobs:
           name: Install tar/gzip utility
           command: |
             yum install -y tar gzip
-            yum install -y unzip      
+            yum install -y unzip     
+
       - run:
           name: Install dependencies
           command: |
@@ -236,7 +236,6 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-
 
       - run:
           name: Get backend url
@@ -249,6 +248,7 @@ jobs:
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
+
       - run:
           name: Deploy frontend objects
           command: |
@@ -346,19 +346,35 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            BACKEND_IP=`cat .circleci/ansible/inventory.txt | head -2 | tail -1`
-            echo ${BACKEND_IP}
-            export URL="http://$BACKEND_IP:3030/api/status"
-            echo $URL
-            curl $URL
+            # BACKEND_IP=`cat .circleci/ansible/inventory.txt | head -2 | tail -1`
+            # echo ${BACKEND_IP}
+            # export URL="http://$BACKEND_IP:3030/api/status"
+            # echo $URL
+            # curl $URL
+
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+              echo SUCCESS
+              exit 0
+            else
+              echo FAIL
+              exit 1
+            fi
+
       - run:
           name: Frontend smoke test.
           command: |
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com/#/employees"            
             echo ${URL} 
             curl -s ${URL} | grep "Welcome" 
-      #- destroy-environment
-      #- revert-migrations
+      - destroy-environment
+      - revert-migrations
 
 #   cloudfront-update:
 #     docker:
