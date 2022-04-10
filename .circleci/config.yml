@@ -332,17 +332,17 @@ jobs:
       
   smoke-test:
     docker:
-      - image: centos:centos7
+      - image: circleci/node:14.18.1 
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            yum install -y epel-release
-            yum install -y tar gzip nodejs npm curl awscli
-      - attach_workspace:
-          name: Attach Workspace
-          at: ~/           
+            sudo apt update
+            sudo apt upgrade -y
+            sudo apt install -y curl
+            sudo apt install -y awscli
+            sudo apt install -y nodejs
       - run:
           name: Backend smoke test.
           command: |
