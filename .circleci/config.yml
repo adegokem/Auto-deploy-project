@@ -322,49 +322,49 @@ jobs:
   #     - revert-migrations
       
 
-#   deploy-backend:
-#     docker:
-#       - image: centos:centos7
-#     steps:
-#       - checkout
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             yum install -y epel-release
-#             yum install -y tar gzip ansible nodejs npm python3
-#       - add_ssh_keys:
-#           name: Add ssh keys with fingerprint
-#           fingerprints:
-#             - "60:61:db:e9:5c:85:63:45:5f:1e:86:76:a1:ed:81:cf"
-#       - attach_workspace:
-#           name: Attach Workspace
-#           at: ~/
-#       - run:
-#           name: Deploy backend
-#           command: |
-#             echo ENVIRONMENT=production >> "backend/.env"
-#             echo NODE_ENV=production >> "backend/.env"
-#             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-#             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-#             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-#             echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-#             echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-#             echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-#             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-#             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-#             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+  deploy-backend:
+    docker:
+      - image: centos:centos7
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y epel-release
+            yum install -y tar gzip ansible nodejs npm python3
+      - add_ssh_keys:
+          name: Add ssh keys with fingerprint
+          fingerprints:
+            - "60:61:db:e9:5c:85:63:45:5f:1e:86:76:a1:ed:81:cf"
+      - attach_workspace:
+          name: Attach Workspace
+          at: ~/
+      - run:
+          name: Deploy backend
+          command: |
+            echo ENVIRONMENT=production >> "backend/.env"
+            echo NODE_ENV=production >> "backend/.env"
+            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
 
-#             tar -C backend -czvf artifact.tar.gz .
-#             cd backend
-#             npm i
-#             npm run build
-#             cd ..
-#             tar -C backend -czvf artifact.tar.gz .
-#             export ANSIBLE_HOST_KEY_CHECKING=False
-#             cd ~/project/.circleci/ansible
-#             echo "Contents  of the inventory.txt file is -------"
-#             cat inventory.txt
-#             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.txt deploy-backend.yml
+            tar -C backend -czvf artifact.tar.gz .
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            cd ~/project/.circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.txt deploy-backend.yml
             
       
       
@@ -486,8 +486,8 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-#       - deploy-backend:
-#           requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
 #       - smoke-test:
 #           requires: [deploy-backend, deploy-frontend]
 #       - cloudfront-update:
