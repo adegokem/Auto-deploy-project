@@ -346,12 +346,6 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            # BACKEND_IP=`cat .circleci/ansible/inventory.txt | head -2 | tail -1`
-            # echo ${BACKEND_IP}
-            # export URL="http://$BACKEND_IP:3030/api/status"
-            # echo $URL
-            # curl $URL
-
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
