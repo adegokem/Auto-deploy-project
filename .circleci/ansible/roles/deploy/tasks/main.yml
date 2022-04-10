@@ -48,4 +48,5 @@
     pm2 stop default
     pm2 start npm -- run "start:dev"
     cd dist
+    npm i
     pm2 start main.js --update-env
