@@ -24,7 +24,7 @@ commands:
           when: on_fail
           command: |
             echo "revert migrations begins..."
-            curl https://kvdb.io/B1Ct8L4ord1FeiK7SjsNvG/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'MIGRATION_OK'
+            curl https://kvdb.io/BEx6Xf7H9cQr5cZsK9AxNcf/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'MIGRATION_OK'
             if(( migrations==1 )); 
             then
               cd ~/project/backend   
@@ -208,10 +208,10 @@ jobs:
             if grep -q "has been executed successfully" migration_status
             then
               echo "DB migration was successful, will update KVDB..."
-              curl https://kvdb.io/NAawGzzo92fBQvDuMJ6cnn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/Ex6Xf7H9cQr5cZsK9AxNcf/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             else
               echo "DB migration failed, please verify setup! Probably the database already exists. Verify setup!"
-              curl https://kvdb.io/NAawGzzo92fBQvDuMJ6cnn/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
+              curl https://kvdb.io/Ex6Xf7H9cQr5cZsK9AxNcf/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
             fi
             echo "WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment
@@ -355,7 +355,7 @@ jobs:
             if curl "${API_URL}/api/status" | grep "ok"
             then
               echo SUCCESS
-              exit 0
+              exit 1
             else
               echo FAIL
               exit 1
@@ -461,9 +461,9 @@ workflows:
           requires: [run-migrations, deploy-frontend]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
 
       
