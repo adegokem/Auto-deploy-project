@@ -375,8 +375,8 @@ jobs:
               echo FAIL
               exit 1
             fi
-      - destroy-environment
-      - revert-migrations
+      # - destroy-environment
+      # - revert-migrations
 
   cloudfront-update:
     docker:
@@ -468,8 +468,8 @@ jobs:
             #  else
             #     echo "i am out"
             # fi    
-      - destroy-environment
-      - revert-migrations   
+      # - destroy-environment
+      # - revert-migrations   
     
 workflows:
   default:
