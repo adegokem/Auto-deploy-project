@@ -15,32 +15,32 @@
 
 # - name: Install BE packages based on package.json.
 #   npm:
-#     path: /home/ubuntu/cdond-c3-projectstarter/backend
+#     path: /home/ubuntu/Auto-deploy-project/backend
 #     state: present
 
 - name: "install dependency"
   become: true
   shell: "sudo npm install"
   args:
-    chdir: "/home/ubuntu/cdond-c3-projectstarter/backend"
+    chdir: "/home/ubuntu/Auto-deploy-project/backend"
 
 - name: "install peers dependency"
   become: true
   shell: "sudo npm install -g npm-install-peers"
   args:
-    chdir: "/home/ubuntu/cdond-c3-projectstarter/backend"
+    chdir: "/home/ubuntu/Auto-deploy-project/backend"
 
 - name: "build backend server"
   become: true
   shell: "npm run build"
   args:
-    chdir: "/home/ubuntu/cdond-c3-projectstarter/backend"
+    chdir: "/home/ubuntu/Auto-deploy-project/backend"
 
 - name: "run backend server"
   become: true
   shell: "pm2 start npm --name 'udapeople' -- start"
   args:
-    chdir: "/home/ubuntu/cdond-c3-projectstarter/backend"
+    chdir: "/home/ubuntu/Auto-deploy-project/backend"
   async: 45
   poll: 0
 
