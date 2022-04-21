@@ -296,8 +296,8 @@ jobs:
           name: Deploy backend
           command: |
               cd backend
-              apk add --update nodejs-npm
-              apk add --update npm
+            # apk add --update nodejs-npm
+              # apk add --update npm
               npm install
               npm run build
               echo build successful
