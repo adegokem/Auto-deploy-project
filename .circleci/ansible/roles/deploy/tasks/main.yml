@@ -1,5 +1,6 @@
 ---
 - name: Creates backend directory
+  become: True 
   file:
     path: /home/ubuntu/backend
     state: directory
@@ -12,6 +13,7 @@
   become: true
   apt:
     upgrade: "yes"
+    
 - name: install curl
   apt: 
     name: 
