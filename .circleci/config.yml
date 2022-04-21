@@ -273,7 +273,7 @@ jobs:
       
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: cimg/python:3.9
     steps:
       - checkout
       - add_ssh_keys:
@@ -283,9 +283,14 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            cd ~/project/.circleci/ansible
-            apk add --update ansible tar gzip nodejs npm rsync openssh curl nodejs
-            pip install awscli
+            pip3 install ansible awscli ansible-modules-pm2
+            sudo apt-get install -y tar gzip curl rsync openssh
+            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash - && \
+            sudo apt-get install -y nodejs build-essential
+
+          # cd ~/project/.circleci/ansible
+            # apk add --update ansible tar gzip nodejs npm rsync openssh curl
+            # pip install awscli
   
       - run:
           name: Deploy backend
@@ -303,12 +308,12 @@ jobs:
               touch .env
               echo ENVIRONMENT=production >> "backend/.env"
               echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-              echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity{.ts,.js} >> "backend/.env"
+              echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
               echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
               echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
               echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
               echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> "backend/.env"
-              echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> "backend//.env"
+              echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> "backend/.env"
               echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
               echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             

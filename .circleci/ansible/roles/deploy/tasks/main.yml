@@ -1,15 +1,38 @@
 ---
+- name: Creates backend directory
+  file:
+    path: /home/ubuntu/backend
+    state: directory
+
+- name: copy artifact.tar.gz
+  unarchive:
+    src: /home/circleci/project/artifact.tar.gz
+    dest: /home/ubuntu/backend
 - name: "upgrade packages."
   become: true
   apt:
     upgrade: "yes"
-
-- name: "install dependencies."
-  become: true
-  apt:
-    name: ["nodejs", "npm"]
+- name: install curl
+  apt: 
+    name: 
+      - curl
     update_cache: yes
+    cache_valid_time: 3600
+  become: True
 
+- name: get url
+  shell: |
+      curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+  become: True 
+
+
+- name: install node
+  apt: 
+    name: 
+      - nodejs
+    update_cache: yes
+    cache_valid_time: 3600
+  become: True
 
 - name: "install pm2"
   become: true
@@ -19,34 +42,64 @@
     production: yes
     state: present
 
-
-- name: create backend directory
-  become: yes
-  file:
-    path: /home/ubuntu/backend
-    state: directory
-    mode: 0755
-
-- name: copy backend files
-  become: yes
-  copy:
-    src: artifact.tar.gz
-    dest: /home/ubuntu/backend/artifact.tar.gz
-
-- name: unpack backend files
-  become: yes
+- name: Start the app
   shell: |
-    cd /home/ubuntu/backend
-    tar -vxf artifact.tar.gz
-    rm -f artifact.tar.gz
+      cd /home/ubuntu/backend
+      npm install
+      npm audit fix 
+      pm2 list && ps aux|grep node
+      pm2 stop default
+      pm2 start npm -- run start
+  become: True 
+
+# - name: "upgrade packages."
+#   become: true
+#   apt:
+#     upgrade: "yes"
+
+# - name: "install dependencies."
+#   become: true
+#   apt:
+#     name: ["nodejs", "npm"]
+#     update_cache: yes
+
+
+# - name: "install pm2"
+#   become: true
+#   npm:
+#     name: pm2
+#     global: yes
+#     production: yes
+#     state: present
+
+
+# - name: create backend directory
+#   become: yes
+#   file:
+#     path: /home/ubuntu/backend
+#     state: directory
+#     mode: 0755
+
+# - name: copy backend files
+#   become: yes
+#   copy:
+#     src: artifact.tar.gz
+#     dest: /home/ubuntu/backend/artifact.tar.gz
+
+# - name: unpack backend files
+#   become: yes
+#   shell: |
+#     cd /home/ubuntu/backend
+#     tar -vxf artifact.tar.gz
+#     rm -f artifact.tar.gz
     
-- name: start app
-  become: yes
-  shell: |
-    cd /home/ubuntu/backend 
-    npm install
-    pm2 stop default
-    pm2 start npm -- start
-    cd dist
-    pm2 start main.js --update-env
+# - name: start app
+#   become: yes
+#   shell: |
+#     cd /home/ubuntu/backend 
+#     npm install
+#     pm2 stop default
+#     pm2 start npm -- start
+#     cd dist
+#     pm2 start main.js --update-env
 
