@@ -7,13 +7,14 @@
 
 - name: copy artifact.tar.gz
   unarchive:
-    src: /home/circleci/project/artifact.tar.gz
+    src: artifact.tar.gz
     dest: /home/ubuntu/backend
+  become: True
 - name: "upgrade packages."
   become: true
   apt:
     upgrade: "yes"
-    
+
 - name: install curl
   apt: 
     name: 
