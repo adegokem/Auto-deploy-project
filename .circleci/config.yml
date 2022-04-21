@@ -285,7 +285,7 @@ jobs:
           command: |
             pip3 install ansible awscli ansible-modules-pm2
             sudo apt-get install -y tar gzip curl
-            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash - && \
+            curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash - && \
             sudo apt-get install -y nodejs build-essential
 
           # cd ~/project/.circleci/ansible

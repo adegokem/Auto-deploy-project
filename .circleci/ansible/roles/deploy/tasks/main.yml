@@ -25,7 +25,7 @@
 
 - name: get url
   shell: |
-      curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+      curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
   become: True 
 
 
