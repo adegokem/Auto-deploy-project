@@ -26,9 +26,9 @@ commands:
               SUCCESS=$(curl --insecure  https://kvdb.io/Ex6Xf7H9cQr5cZsK9AxNcf/migration_<< parameters.workflow_id >>)
               if (( $SUCCESS == 1 ));
               then
-                  cd ~/project/backend
-                  npm install
-                  npm run migration:revert
+                cd ~/project/backend
+                npm install
+                npm run migration:revert
               fi
 
 jobs:
@@ -207,7 +207,7 @@ jobs:
             then
                 curl https://kvdb.io/Ex6Xf7H9cQr5cZsK9AxNcf/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-            echo "WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}"
+            echo "WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}"      
       - destroy-environment
       - revert-migrations
 
