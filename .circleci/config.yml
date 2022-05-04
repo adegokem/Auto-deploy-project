@@ -186,6 +186,7 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
 
       - destroy-environment
+      - revert-migrations
 
 
   run-migrations:
