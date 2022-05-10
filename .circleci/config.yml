@@ -315,7 +315,6 @@ jobs:
       - run:
           name: Configure server
           command: |    
-              cd ..
               tar -C backend -czvf artifact.tar.gz .
               mkdir .circleci/ansible/roles/deploy/files
               mv artifact.tar.gz .circleci/ansible/roles/deploy/files
