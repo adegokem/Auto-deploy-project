@@ -423,43 +423,27 @@ jobs:
       - run:
           name: Remove old stacks and files
           command: |
-
-            export STACKS=$(aws cloudformation list-stacks \
-            --query "StackSummaries[*].StackName" \
-            --stack-status-filter CREATE_COMPLETE \
+            export OldWorkflowID=$(cat ~/OldWorkflowID.txt)
+            echo OldWorkflowID:"${OldWorkflowID}"
+            
+            export CurrentWorkflowID=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no-paginate --output text)
-            echo OldWorkflowID: ${OldWorkflowID}
-            echo STACKS: "$STACKS"
-
-            if [[ -n "${OldWorkflowID}" ]]  &&  [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            echo CurrentWorkflowID:"${CurrentWorkflowID}"
+            
+            echo "udapeople-${OldWorkflowID}"
+            echo "udapeople-backend-${OldWorkflowID}"
+            echo "udapeople-frontend-${OldWorkflowID}"
+            
+            if [[ "${CurrentWorkflowID}" != "${OldWorkflowID}" ]]
             then
-              echo "s3://udapeople-${OldWorkflowID}"
-              aws s3 rm s3://udapeople-${OldWorkflowID}/ --recursive
-              aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
+                echo "i am in"
+                aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+             else
+                echo "i am out"
             fi 
-
-            # export OldWorkflowID=$(cat ~/OldWorkflowID.txt)
-            # echo OldWorkflowID:"${OldWorkflowID}"
-            
-            # export CurrentWorkflowID=$(aws cloudformation \
-            # list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            # --no-paginate --output text)
-            # echo CurrentWorkflowID:"${CurrentWorkflowID}"
-            
-            # echo "udapeople-${OldWorkflowID}"
-            # echo "udapeople-backend-${OldWorkflowID}"
-            # echo "udapeople-frontend-${OldWorkflowID}"
-            
-            # if [[ "${CurrentWorkflowID}" != "${OldWorkflowID}" ]]
-            # then
-            #     echo "i am in"
-            #     aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-            #     aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-            #     aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-            #  else
-            #     echo "i am out"
-            # fi 
       - destroy-environment
       - revert-migrations   
     
