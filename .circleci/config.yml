@@ -459,7 +459,7 @@ jobs:
             echo "udapeople-backend-${OldWorkflowID}"
             echo "udapeople-frontend-${OldWorkflowID}"
             
-            if [[ "${CurrentWorkflowID}" != "${OldWorkflowID}" ]]
+            if [[ "${CurrentWorkflowID}" =~ "${OldWorkflowID}" ]]
             then
                 echo "i am in."
                 aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
