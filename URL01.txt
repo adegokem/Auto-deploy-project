@@ -1,4 +1,4 @@
 GITHUB URL: https://github.com/adegokem/Auto-deploy-project
 
 
-URL:  https://udapeople-13ebe4d.s3-us-west-2.amazonaws.com/index.html#/employees
+URL:  https://udapeople-67a2b42.s3-us-west-2.amazonaws.com/index.html#/employees
